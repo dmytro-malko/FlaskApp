@@ -16,4 +16,4 @@ app.config['MYSQL_DB'] = db['mysql_db']
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
 
-from tecdoc import ruotes, model
+from tecdoc import ruotes

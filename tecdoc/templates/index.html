@@ -22,7 +22,7 @@
         </div>
     </div>
 </div>
-{% if data %}
+{% if article_from_model %}
 <div class='panel-body'>
     <table class='table table-striped'>
         <thead>
@@ -37,7 +37,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for i in data %}
+            {% for i in article_from_model %}
             <tr>
                 <td>{{i.NormalizedDescription}}</td>
                 <td>{{i.model}}</td>
