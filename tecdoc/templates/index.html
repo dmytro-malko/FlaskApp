@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+    <!-- {% block styles %}
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    {% endblock %} -->
+{% block base %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <form class="card card-sm" method="GET">
+                <div class="card-body row no-gutters align-items-center">
+                    <div class="col">
+                        <input class="form-control form-control-lg form-control-borderless" type="text" name="search" placeholder="Поиск">
+                    </div>
+                    <div class="col-auto">
+                        <input class="btn btn-lg btn-success" type="submit" name="submit" value="Поиск"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% if data %}
+<div class='panel-body'>
+    <table class='table table-striped'>
+        <thead>
+            <tr>
+                <td scope='col'>Название</td>
+                <td scope='col'>Номер на сайте</td>
+                <td scope='col'>Артикул поставщика</td>
+                <td scope='col'>Бренд</td>
+                <td scope='col'>Цена на сайте</td>
+                <td scope='col'>Количество</td>
+                <td scope='col'>Кроссы</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in data %}
+            <tr>
+                <td>{{i.NormalizedDescription}}</td>
+                <td>{{i.model}}</td>
+                <td>{{i.FoundString}}</td>
+                <td>{{i.description}}</td>
+                <td>{{i.price}}</td>
+                <td>{{i.quantity}}</td>
+                <td>
+                    <form action="info">
+                        <input style="display: none;" type="text" name="article" value="{{i.FoundString.replace(' ', '')}}">
+                        <input style="display: none;" type="text" name="brand_id" value="{{i.suppliers_id}}">
+                        <input class="btn btn-success" type="submit" name="submit" value="Поиск кроссов" target="self">
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}

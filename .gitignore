@@ -1,0 +1,4 @@
+db.yaml
+venv_flask
+tecdoc/static/img
+tecdoc/__pycache__

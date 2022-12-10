@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+<!-- {% block styles %}
+    <link href="{{ url_for('static', filename='style/style.css') }}" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+{% endblock %} -->
+{% block base %}
+<div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+                <form class="card card-sm" method="GET">
+                    <div class="card-body row no-gutters align-items-center">
+                        <div class="col">
+                            <input class="form-control form-control-lg form-control-borderless" type="text" name="article" placeholder="Поиск">
+                        </div>
+                        <div class="col-auto">
+                            <input class="btn btn-lg btn-success" type="submit" name="submit" value="Поиск"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% if all_articles_suppliers %}
+    <ul class="grid-crosses">
+        {% for i in all_articles_suppliers %}
+            <a href="info?article={{i.DataSupplierArticleNumber}}&brand_id={{i.suppliers_id}}&submit=Поиск+кроссов">
+            <li style="border: solid 2px #f1f1f1; text-align:center">
+                {{i.FoundString}} {{i.NormalizedDescription}}
+                <strong>{{i.description}}</strong>
+            </li>
+            </a>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% if data_image %}
+        {% for i in data_image %}
+        <h3 style="text-align: center; margin:10px">{{i.NormalizedDescription}} <b>{{i.DataSupplierArticleNumber}}</b> {{i.description}}</h3>
+    <div class="media">    
+        <div>
+            <img src="static/img/{{request.args.get('brand_id')}}/{{i.PictureName}}">
+        </div>
+        {% endfor %}
+        
+        {% if data_article %}
+        <div class='panel-body'>
+            <table class='table table-striped'>
+                <tbody>
+                {% for i in data_article %}
+                <tr>
+                    <td><b>{{i.description}}</b></td>
+                    <td>{{i.displayvalue}}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+    </div>
+    {% endif %}
+    
+    {% if data_crosses %}
+    <h3 style="text-align:center; margin: 10px 0">Кроссы</h3>
+    <ul class="grid-crosses">
+        {% for i in data_crosses %}
+            <li aria-label="{{i.PartsDataSupplierArticleNumber}} {{i.brand}}" target="_self">
+                {{i.PartsDataSupplierArticleNumber}}
+                <strong>{{i.brand}}</strong>
+            </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+
+{% endblock %}
