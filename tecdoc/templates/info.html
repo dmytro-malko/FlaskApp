@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
-<!-- {% block styles %}
+{% block styles %}
+    <link href="{{ url_for('static', filename='img/favicon.png') }}" rel="icon">
     <link href="{{ url_for('static', filename='style/style.css') }}" rel="stylesheet">
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
-{% endblock %} -->
+    {% endblock %}
 {% block base %}
 <div class="container">
         <div class="row justify-content-center">
@@ -51,6 +52,7 @@
                 <tr>
                     <td><b>{{i.description}}</b></td>
                     <td>{{i.displayvalue}}</td>
+                    <td><a href="#" class="btn btn-primary" title="Редактировать">Редактировать</a></td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -61,7 +63,9 @@
     {% endif %}
     
     {% if article_crosses %}
+    <a href="#" class="btn btn-primary" title="Добавить кроссы">Добавить кроссы</a>
     <h3 style="text-align:center; margin: 10px 0">Кроссы</h3>
+    
     <ul class="grid-crosses">
         {% for i in article_crosses %}
             <li aria-label="{{i.PartsDataSupplierArticleNumber}} {{i.brand}}" target="_self">

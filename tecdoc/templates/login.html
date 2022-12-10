@@ -3,6 +3,8 @@
 <link rel="stylesheet"
     href="{{url_for('static', filename='style/style.css')}}">
 {% endblock %}
+{% block navbar %}
+{% endblock %}
 {% block base %}
     <p>{{msg}}</p>
     <div class="login-box">
@@ -29,4 +31,5 @@
         </div>
         </form>
     </div>
+<style>body {background: linear-gradient(#141e30, #243b55);}</style>
 {% endblock %}
