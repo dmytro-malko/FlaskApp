@@ -6,6 +6,13 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
     {% endblock %} -->
 {% block content %}
+{% with messeges = get_flashed_messages(with_categories=true) %}
+          {% if messeges %}
+            {% for category, messege in messeges %}
+              <p class="alert alert-{{category}}">{{ messege }}</p>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-8">

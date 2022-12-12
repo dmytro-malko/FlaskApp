@@ -85,13 +85,18 @@ class UserData(ArticleInfo):
     def update_user_data(self, user_data):
         user_id = user_data['user-id']
         login = user_data['login']
-        is_admin = user_data['is-admin']
+        if 'is-admin' in user_data:
+            is_admin = user_data['is-admin']
+        else:
+            is_admin = 0
         first_name = user_data['first-name']
         last_name = user_data['last-name']
         email = user_data['email']
         phone = user_data['phone']
         self.cursor.execute(f"UPDATE `users` SET `login`='{login}',`is_admin`='{is_admin}',`first_name`='{first_name}',\
                              `last_name`='{last_name}',`email`='{email}',`phone`='{phone}' WHERE `id`='{user_id}'")
+        mysql.connection.commit()
+        self.cursor.close()
 
     def check_user_login(self, user_data):
         login = user_data['login']

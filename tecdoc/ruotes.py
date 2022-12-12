@@ -1,10 +1,31 @@
+from functools import wraps
 from flask import redirect, render_template, request, flash, session
 
 from tecdoc import app
 from .model import ArticleInfo, UserData
 
 
+def logged_in(f):
+    @wraps(f)
+    def decorated_func(*args, **kwargs):
+        if session.get("login"):
+            return f(*args, **kwargs)
+        else:
+            return redirect("/login")
+    return decorated_func
+
+def admin_in(f):
+    @wraps(f)
+    def decorated_func(*args, **kwargs):
+        if session.get("is_admin"):
+            return f(*args, **kwargs)
+        else:
+            flash('Нет доступа!!!', 'danger')
+            return redirect("/")
+    return decorated_func
+
 @app.route('/', methods=['GET', 'POST'])
+@logged_in
 def main():
     if request.method == 'GET' and request.args.get('search'):
         article = str(request.args.get('search'))
@@ -13,6 +34,7 @@ def main():
     return render_template('index.html')
 
 @app.route('/info', methods=['GET', 'POST'])
+@logged_in
 def info():
     if request.method == 'GET' and request.args.get('submit')=='Поиск':
         article_dirty = str(request.args.get('article'))
@@ -44,7 +66,7 @@ def login():
         elif user:
             session['login'] = True
             session['user_id'] = user['id']
-            session['login'] = user['login']
+            session['user_name'] = user['login']
             session['first_name'] = user['first_name']
             session['last_name'] = user['last_name']
             if user['is_admin'] == 1:
@@ -64,17 +86,19 @@ def logout():
     return redirect('/login')
 
 @app.route('/admin')
+@admin_in
 def admin():
     return render_template('admin/admin.html')
 
 @app.route('/admin/users', methods=['GET', 'POST'])
+@admin_in
 def users():
     if request.method=='POST':
         if 'user-id' in request.form:
             user_data = request.form
             delete_user = UserData().delete_user(user_data)
             flash(delete_user, 'success')
-            return render_template('/admin/users.html')
+            return redirect('/admin/users')
         else:
             user_data = request.form
             users_data = UserData().create_user(user_data)
@@ -88,12 +112,13 @@ def users():
         return render_template('/admin/users.html', users_data=users_data)
 
 @app.route('/admin/edit-user/<int:id>', methods=['GET','POST'])
+@admin_in
 def edit_user(id):
     user = UserData().get_user_data(id)
     if request.method=='POST':
         user_data = request.form
         UserData().update_user_data(user_data)
-        return users()
+        return redirect('/admin/users')
     return render_template('/admin/edit-user.html', user=user)
 
 @app.errorhandler(404)
