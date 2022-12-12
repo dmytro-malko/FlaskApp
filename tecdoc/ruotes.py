@@ -1,7 +1,7 @@
-from flask import redirect, render_template, request
+from flask import redirect, render_template, request, flash, session
 
-from tecdoc import app, mysql
-from .model import ArticleInfo
+from tecdoc import app
+from .model import ArticleInfo, UserData
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -35,7 +35,37 @@ def info():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+    if request.method=='POST':
+        user_details = request.form
+        user = UserData().check_user_data(user_details)
+        if type(user)==str:
+            flash(user, 'danger')
+            return render_template('login.html')
+        elif user:
+            session['login'] = True
+            session['user_id'] = user['id']
+            session['login'] = user['login']
+            session['first_name'] = user['first_name']
+            session['last_name'] = user['last_name']
+            if user['is_admin'] == 1:
+                session['is_admin'] = True
+            else:
+                session['is_admin'] = False
+            return redirect('/')
+        else:
+            flash('Данные введены не верно', 'danger')
+            return render_template('login.html')
+    else:
+        return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/login')
+
+@app.route('/admin', methods=['GET', 'POST'])
+def admin():
+    return render_template('/admin.html')
 
 @app.errorhandler(404)
 def page_not_found(error):

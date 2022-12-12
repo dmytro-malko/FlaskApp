@@ -3,7 +3,7 @@ from flask_bootstrap import Bootstrap
 from flask_mysqldb import MySQL
 
 
-import yaml
+import yaml, os
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -15,5 +15,7 @@ app.config['MYSQL_PASSWORD'] = db['mysql_password']
 app.config['MYSQL_DB'] = db['mysql_db']
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
+
+app.config['SECRET_KEY'] = os.urandom(24)
 
 from tecdoc import ruotes
