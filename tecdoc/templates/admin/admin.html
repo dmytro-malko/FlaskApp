@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="width: 80%" class="container align-center admin-menu">
+    <div class="row">
+        <div class="col-sm-6">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title">Пользователи</h5>
+              <p class="card-text">Добавленние и редактирование пользователей</p>
+              <a href="admin/users" class="btn btn-primary">Пользователи</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title">Кроссы</h5>
+              <p class="card-text">Добавленние и редактирование кроссов</p>
+              <a href="admin/crosses" class="btn btn-primary">Кроссы</a>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+{% endblock %}

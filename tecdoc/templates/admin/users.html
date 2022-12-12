@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container align-center">
+    {% with messeges = get_flashed_messages(with_categories=true) %}
+        {% if messeges %}
+            {% for category, messege in messeges %}
+              <p class="alert alert-{{category}}">{{ messege }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <div class="align-center">
+        <button style="margin: 0 auto; display: block" type="button" id="addUser" class="btn btn-primary">Добавить пользователя</button>
+    </div>
+{% if users_data %}
+    <table class="table table-striped table-dark users-table">
+    <thead>
+      <tr>
+        <th scope="col">Логин</th>
+        <th scope="col">Имя</th>
+        <th scope="col">Телефон</th>
+        <th scope="col">E-mail</th>
+        <th scope="col">Админ</th>
+        <th style="text-align: right;" scope="col">Настройки</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for user in users_data %}
+      <tr>
+        <th scope="row">{{user['login']}}</th>
+        <td>{{user['first_name']+' '+ user['last_name']}}</td>
+        <td>{{user['phone']}}</td>
+        <td>{{user['email']}}</td>
+        <td>{% if user['is_admin'] == 1 %}Да{% else %}Нет{% endif %}</td>
+        <td style="text-align: right;">
+            <a href="/admin/edit-user/{{user['id']}}"><button type="button" class="btn btn-warning">Редактировать</button></a>
+            <button type="button" id="deleteUser" class="btn btn-danger" onclick="deleteUser({{user['id']}})">Удалить</button>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+    
+<div id="addUserModal" class="modal" style="display: none;">
+    <div class="login-box">
+        <form method="POST" style="width: 100%;">
+                <div class="user-box">
+                    <input type="text" name="first-name">
+                    <label>Имя</label>
+                </div>
+                <div class="user-box">
+                    <input type="text" name="last-name">
+                    <label>Фамилия</label>
+                </div>
+                <div class="user-box">
+                    <input type="email" name="email">
+                    <label>Email</label>
+                </div>
+                <div class="user-box">
+                    <input type="tel" name="phone">
+                    <label>Телефон</label>
+                </div>
+                <div class="user-box">
+                  <input type="text" name="login">
+                  <label>Логин</label>
+                </div>
+                <div class="user-box">
+                  <input type="password" name="password">
+                  <label>Пароль</label>
+                </div>
+                <div class="user-box">
+                    <input type="password" name="confirmPassword">
+                    <label>Подтвердите пароль</label>
+                </div>
+                <div class="user-box">
+                    <input name="is-admin" id="is-admin" type="checkbox" value="0">
+                    <label>Админ</label>
+                </div>
+                <div class="wrap-button">
+                  <button tupe="submit">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                      Добавить
+                  </button>
+                </div>
+        </form>
+    </div>
+</div>
+<div id="deleteUserModal" class="modal" style="display: none;">
+        <div class="login-box" style="width: auto;">
+            <form method="POST" style="width: 100%;">
+                <h4 style="color: white; text-align: center;">Вы уверенны?</h4>
+                <input style="display: none;" type="text" id="deleteUserId" name="user-id" value="0">
+                <div style="text-align: center;">
+                    <button style="margin: 5 auto;" tupe="submit">Да</button>
+                </div>
+            </form>
+        </div>
+</div>
+</div>
+<script type="text/javascript">
+    function deleteUser(userId) {
+        var modal = document.getElementById('deleteUserModal');
+        var btn = document.getElementById("deleteUser");
+        var inp = document.getElementById("deleteUserId")
+        modal.style.display = "flex";
+        inp.value = userId;
+        window.addEventListener("click", function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        })
+    }
+</script>
+<script type="text/javascript">
+    var modal = document.getElementById('addUserModal');
+    var btn = document.getElementById("addUser");
+    var span = document.getElementsByClassName("close")[0];
+    btn.onclick = function() {
+        modal.style.display = "flex";
+    }
+    window.addEventListener("click", function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    })
+</script>
+<script type="text/javascript">
+    var chbox;
+    chbox=document.getElementById('is-admin');
+    chbox.onclick = function() {
+        if (chbox.checked) {
+            chbox.value = "1";
+        }
+        else {
+            chbox.value = "0";
+        }
+    }
+</script>
+{% endblock %}

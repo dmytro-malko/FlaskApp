@@ -37,7 +37,7 @@ def info():
 def login():
     if request.method=='POST':
         user_details = request.form
-        user = UserData().check_user_data(user_details)
+        user = UserData().check_user_login(user_details)
         if type(user)==str:
             flash(user, 'danger')
             return render_template('login.html')
@@ -63,9 +63,38 @@ def logout():
     session.clear()
     return redirect('/login')
 
-@app.route('/admin', methods=['GET', 'POST'])
+@app.route('/admin')
 def admin():
-    return render_template('/admin.html')
+    return render_template('admin/admin.html')
+
+@app.route('/admin/users', methods=['GET', 'POST'])
+def users():
+    if request.method=='POST':
+        if 'user-id' in request.form:
+            user_data = request.form
+            delete_user = UserData().delete_user(user_data)
+            flash(delete_user, 'success')
+            return render_template('/admin/users.html')
+        else:
+            user_data = request.form
+            users_data = UserData().create_user(user_data)
+            #flash(add_user, 'success')
+            return render_template('/admin/users.html', users_data=users_data)
+    users_data = UserData().check_users_data()
+    if type(users_data) == str:
+        flash(users_data, 'danger')
+        return render_template('/admin/users.html')
+    else:
+        return render_template('/admin/users.html', users_data=users_data)
+
+@app.route('/admin/edit-user/<int:id>', methods=['GET','POST'])
+def edit_user(id):
+    user = UserData().get_user_data(id)
+    if request.method=='POST':
+        user_data = request.form
+        UserData().update_user_data(user_data)
+        return users()
+    return render_template('/admin/edit-user.html', user=user)
 
 @app.errorhandler(404)
 def page_not_found(error):

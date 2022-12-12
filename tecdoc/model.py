@@ -60,37 +60,44 @@ class UserData(ArticleInfo):
     def create_user(self, user_data):
         login = user_data['login']
         password = generate_password_hash(user_data['password'])
-        is_admin = user_data['is-admin']
+        if 'is-admin' in user_data:
+            is_admin = user_data['is-admin']
+        else:
+            is_admin = 0
         first_name = user_data['first-name']
-        last_name = user_data['last_name']
+        last_name = user_data['last-name']
         email = user_data['email']
         phone = user_data['phone']
-        try:
-            self.cursor.execute("INSERT INTO `users`(`login`, `password`, `is_admin`, `first_name`, `last_name`, `email`, `phone`)\
-                                VALUES (%s,%s,%s,%s,%s,%s,%s)" , (login, password, is_admin, first_name, last_name, email, phone))
-            mysql.connection.commit()
-            self.cursor.close()
-            return "Пользователь успешно добавлен"
-        except:
-            pass
+        if user_data['password'] == user_data['confirmPassword']:
+            try:
+                self.cursor.execute("INSERT INTO `users`(`login`, `password`, `is_admin`, `first_name`, `last_name`, `email`, `phone`)\
+                                    VALUES (%s,%s,%s,%s,%s,%s,%s)" , (login, password, is_admin, first_name, last_name, email, phone))
+                mysql.connection.commit()
+                self.results = self.cursor.execute("SELECT * FROM users")
+                users = self.cursor.fetchall()
+                self.cursor.close()
+                return users
+            except:
+                return "Произошла ошибка!!! Проверьте правильность заполнения формы!!!"
+        else:
+            return "Пароли не одинаковые!!!!"
 
     def update_user_data(self, user_data):
-        user_id = user_data['user_id']
+        user_id = user_data['user-id']
         login = user_data['login']
-        password = generate_password_hash(user_data['password'])
         is_admin = user_data['is-admin']
         first_name = user_data['first-name']
-        last_name = user_data['last_name']
+        last_name = user_data['last-name']
         email = user_data['email']
         phone = user_data['phone']
-        self.cursor.execute(f"UPDATE `users` SET `login`={login},`password`={password},`is_admin`={is_admin},`first_name`={first_name},\
-                             `last_name`={last_name},`email`={email},`phone`={phone} WHERE `id`={user_id}")
+        self.cursor.execute(f"UPDATE `users` SET `login`='{login}',`is_admin`='{is_admin}',`first_name`='{first_name}',\
+                             `last_name`='{last_name}',`email`='{email}',`phone`='{phone}' WHERE `id`='{user_id}'")
 
-    def check_user_data(self, user_data):
+    def check_user_login(self, user_data):
         login = user_data['login']
-        password = generate_password_hash(user_data['password'])
+        password = user_data['password']
         try:
-            result = self.cursor.execute(f"SELECT * FROM users WHERE login={login}")
+            result = self.cursor.execute(f"SELECT * FROM users WHERE login='{login}'")
             if result > 0:
                 user = self.cursor.fetchone()
                 if check_password_hash(user['password'], password):
@@ -113,8 +120,13 @@ class UserData(ArticleInfo):
             self.cursor.close()
             return "Пользователей не найденно"
 
+    def get_user_data(self, id):
+        self.cursor.execute(f"SELECT * FROM users WHERE id={id}")
+        user = self.cursor.fetchone()
+        return user
+
     def delete_user(self, user_data):
-        user_id = user_data['user_id']
+        user_id = user_data['user-id']
         self.cursor.execute("DELETE FROM users WHERE id=%s" , ([user_id]))
         mysql.connection.commit()
         self.cursor.close()
