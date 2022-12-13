@@ -25,7 +25,7 @@ def admin_in(f):
     return decorated_func
 
 @app.route('/', methods=['GET', 'POST'])
-@logged_in
+# @logged_in
 def main():
     if request.method == 'GET' and request.args.get('search'):
         article = str(request.args.get('search'))
@@ -34,25 +34,31 @@ def main():
     return render_template('index.html')
 
 @app.route('/info', methods=['GET', 'POST'])
-@logged_in
+# @logged_in
 def info():
-    if request.method == 'GET' and request.args.get('submit')=='Поиск':
+    info = ArticleInfo()
+
+    if request.method == 'GET' and request.args.get('article') and request.args.get('brand_id'):
+        article = str(request.args.get('article'))
+        brand = str(request.args.get('brand_id'))
+        
+        article_crosses = info.search_crosses(article, brand)
+        article_info = info.serch_article_info(article, brand)
+        article_desc = info.serch_article_desc(article, brand)
+        article_img = info.get_article_img(article, brand)
+        info.close_connection()
+
+        return render_template('info.html', article_crosses=article_crosses, article_info=article_info, article_desc=article_desc, article_img=article_img)
+
+    elif request.method == 'GET' and request.args.get('article'):
         article_dirty = str(request.args.get('article'))
         article = "".join(c for c in article_dirty if c.isalnum())
         
-        all_articles_suppliers = ArticleInfo().serch_article(article)
-
+        all_articles_suppliers = info.serch_article(article)
+        
+        info.close_connection()
         return render_template('info.html', all_articles_suppliers=all_articles_suppliers)
-    
-    if request.method == 'GET' and request.args.get('submit')=='Поиск кроссов':
-        article = str(request.args.get('article'))
-        brand = str(request.args.get('brand_id'))
 
-        article_crosses = ArticleInfo().search_crosses(article, brand)
-        article_info = ArticleInfo().serch_article_info(article, brand)
-        article_desc = ArticleInfo().serch_article_desc(article, brand)
-
-        return render_template('info.html', article_crosses=article_crosses, article_info=article_info, article_desc=article_desc)
     return render_template('info.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -86,12 +92,12 @@ def logout():
     return redirect('/login')
 
 @app.route('/admin')
-@admin_in
+# @admin_in
 def admin():
     return render_template('admin/admin.html')
 
 @app.route('/admin/users', methods=['GET', 'POST'])
-@admin_in
+# @admin_in
 def users():
     if request.method=='POST':
         if 'user-id' in request.form:
@@ -112,7 +118,7 @@ def users():
         return render_template('/admin/users.html', users_data=users_data)
 
 @app.route('/admin/edit-user/<int:id>', methods=['GET','POST'])
-@admin_in
+# @admin_in
 def edit_user(id):
     user = UserData().get_user_data(id)
     if request.method=='POST':

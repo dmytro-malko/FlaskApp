@@ -5,11 +5,13 @@ html {
     margin:0;
     padding:0;
     font-family: sans-serif;
-    background: linear-gradient(#141e30, #243b55);
+    background: linear-gradient(#141e30, #243b55) no-repeat center center fixed;
+    background-size: cover;
   }
   
   .container{
-    margin: 15px;
+    color: white;
+    margin: 15px auto;
   }
 
   .modal {
@@ -187,7 +189,6 @@ html {
   .grid-crosses{
     font-size: 16px;
     font-weight: 500;
-    color: #000;
   }
   .grid-crosses li {
     width: 30%;
@@ -195,6 +196,35 @@ html {
     margin: 5px
   }
 
+  .grid-crosses li a {
+    color: white;
+  }
+
   .users-table {
     margin: 20px 0
+  }
+
+  .search-table tr:hover {
+    cursor: pointer;
+    background-color: #32383e;
+  }
+
+  .image-block {
+    position: relative;
+    width: 40%;
+    text-align: center;
+  }
+
+  .image-block .sub-photo {
+    display: inline-block;
+    margin: 2px;
+    padding: 10px;
+  }
+
+  .image-block .sub-photo img {
+    width: 50px;
+    height: 50px;
+  }
+  .panel-body {
+    width: 60%;
   }

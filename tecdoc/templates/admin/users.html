@@ -33,15 +33,15 @@
         <td>{% if user['is_admin'] == 1 %}Да{% else %}Нет{% endif %}</td>
         <td style="text-align: right;">
             <a href="/admin/edit-user/{{user['id']}}"><button type="button" class="btn btn-warning">Редактировать</button></a>
-            <button type="button" id="deleteUser" class="btn btn-danger" onclick="deleteUser({{user['id']}})">Удалить</button>
+            <button type="button" id="deleteUser" class="btn btn-danger" onclick="deleteUser('{{user.id}}')">Удалить</button>
         </td>
       </tr>
     {% endfor %}
     </tbody>
   </table>
-</div>
 {% endif %}
-    
+</div>
+
 <div id="addUserModal" class="modal" style="display: none;">
     <div class="login-box">
         <form method="POST" style="width: 100%;">
