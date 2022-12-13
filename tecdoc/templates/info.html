@@ -48,8 +48,9 @@
         {% endif %}
         </div>
         {% endfor %}
+        {% include '_navbar-info.html' %}
         
-        {% if article_desc %}
+        <!-- {% if article_desc %}
         <div class='panel-body'>
             <table class='table table-striped table-dark'>
                 <tbody>
@@ -57,7 +58,6 @@
                 <tr>
                     <td><b>{{i.description}}</b></td>
                     <td>{{i.displayvalue}}</td>
-                    <!-- <td><a href="#" class="btn btn-primary" title="Редактировать">Редактировать</a></td> -->
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -66,14 +66,70 @@
                 <button class="btn btn-primary" title="Редактировать">Редактировать</button>
             </div>
         </div>
-    {% endif %}
+        {% endif %}
+        {% if article_applicability %}
+        <div class='panel-body'>
+            <table class='table table-striped table-dark'>
+                <tbody>
+                {% for i in article_applicability %}
+                <tr>
+                    <td><b>{{i.fulldescription}}</b></td>
+                    <td>{{i.constructioninterval}}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="text-center">
+                <button class="btn btn-primary" title="Редактировать">Редактировать</button>
+            </div>
+        </div>
+        {% endif %} -->
+    </div>
+    <div id="addCrossesModal" class="modal" style="display: none;">
+        <div class="login-box">
+            <form method="POST" style="width: 100%;">
+                    <div class="user-box">
+                        <input type="text" disabled name="article" value="{{article_info[0]['DataSupplierArticleNumber']}}">
+                        <label>Артикул</label>
+                    </div>
+                    <div class="user-box">
+                        <input type="text" disabled style="display: none;" name="brand-id" value="{{request.args.get('brand_id')}}">
+                        <input type="text" disabled value="{{article_info[0]['description']}}">
+                        <label>Бренд</label>
+                    </div>
+                    <div class="user-box">
+                        <input type="text" name="oem-number">
+                        <label>Номер аналога</label>
+                    </div>
+                    <div class="user-box">
+                        <input type="text" id="brandOeId" disabled style="display: none;" name="manufacturer-id" value="">
+                        <label>Бренд аналога</label>
+                        <select>
+                        {% if manufacturers %}
+                            <option value="">Выберете производителя</option>
+                            {% for manufacturer in manufacturers %}
+                            <option value="{{ manufacturer.id }}">{{ manufacturer.fulldescription }}</option>
+                            {% endfor %}
+                        {% endif %}
+                        </select>
+                    </div>
+                    <div class="wrap-button">
+                      <button tupe="submit">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                          Добавить
+                      </button>
+                    </div>
+            </form>
+        </div>
     </div>
     {% endif %}
-    
     {% if article_crosses %}
     <div style="text-align:center; margin: 10px 0">
         <div><h3>Кроссы</h3></div>
-        <div><a href="#" class="btn btn-primary" title="Добавить кроссы">Добавить кроссы</a></div>
+        <div><a href="#" class="btn btn-primary" id="addCrosses" title="Добавить кроссы">Добавить кроссы</a></div>
     </div>
     <ul class="grid-crosses">
         {% for i in article_crosses %}
@@ -87,6 +143,19 @@
     </ul>
     {% endif %}
 </div>
+
+<script type="text/javascript">
+    var modal = document.getElementById('addCrossesModal');
+    var btn = document.getElementById("addCrosses");
+    btn.onclick = function() {
+        modal.style.display = "flex";
+    }
+    window.addEventListener("click", function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    })
+</script>
 <script type="text/javascript">
     function replaceImage(img) {
         var inp = document.getElementById("bigIamge")

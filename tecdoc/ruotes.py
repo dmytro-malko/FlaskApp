@@ -46,9 +46,14 @@ def info():
         article_info = info.serch_article_info(article, brand)
         article_desc = info.serch_article_desc(article, brand)
         article_img = info.get_article_img(article, brand)
+        article_applicability = info.get_article_applicability(article, brand)
+        manufacturers = info.get_list_manufacturers()
         info.close_connection()
+        print(article_applicability)
 
-        return render_template('info.html', article_crosses=article_crosses, article_info=article_info, article_desc=article_desc, article_img=article_img)
+        return render_template('info.html', article_crosses=article_crosses,
+        article_info=article_info, article_desc=article_desc, article_img=article_img,
+        manufacturers=manufacturers, article_applicability=article_applicability)
 
     elif request.method == 'GET' and request.args.get('article'):
         article_dirty = str(request.args.get('article'))

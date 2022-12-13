@@ -54,6 +54,17 @@ class ArticleInfo():
         self.article_from_model = self.cursor.fetchall()
         return self.article_from_model
 
+    def get_list_manufacturers(self):
+        self.cursor.execute("SELECT DISTINCT id, fulldescription FROM `manufacturers` ORDER BY `manufacturers`.`fulldescription` ASC;")
+        self.list_manufacturers = self.cursor.fetchall()
+        return self.list_manufacturers
+
+    def get_article_applicability(self, article, brand_id):
+        self.cursor.execute("SELECT DISTINCT models.fulldescription, models.constructioninterval FROM `article_li`\
+                            JOIN cars ON cars.cars_id=article_li.linkageId JOIN models ON cars.model_id=models.id\
+                            WHERE DataSupplierArticleNumber=%s AND supplierId=%s  ORDER BY `models`.`fulldescription` ASC", ([article,brand_id]))
+        self.article_applicability = self.cursor.fetchall()
+        return self.article_applicability
 class UserData(ArticleInfo):
         
     def create_user(self, user_data):

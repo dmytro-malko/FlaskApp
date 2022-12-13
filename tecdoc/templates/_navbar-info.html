@@ -1,0 +1,111 @@
+<div class="tile" id="tile-1">
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs nav-justified" role="tablist">
+      <div class="slider"></div>
+       <li class="nav-item">
+          <a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">Информация</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="applicability-tab" data-toggle="tab" href="#applicability" role="tab" aria-controls="applicability" aria-selected="false">Применяемость</a>
+        </li>
+    </ul>
+  
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div class="panel-body tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
+        {% if article_desc %}
+            <table class='table table-striped table-dark'>
+                <tbody>
+                {% for i in article_desc %}
+                <tr>
+                    <td><b>{{i.description}}</b></td>
+                    <td>{{i.displayvalue}}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="text-center">
+                <button class="btn btn-warning" title="Редактировать">Редактировать</button>
+            </div>
+        {% endif %}
+      </div>
+    <div class="panel-body tab-pane show fade" id="applicability" role="tabpanel" aria-labelledby="applicability-tab">
+        {% if article_applicability %}
+        <div class='panel-body'>
+            <table class='table table-striped table-dark'>
+                <tbody>
+                {% for i in article_applicability %}
+                <tr>
+                    <td><b>{{i.fulldescription}}</b></td>
+                    <td>{{i.constructioninterval}}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="text-center wrap-button">
+                <button class="btn btn-warning" title="Редактировать">Редактировать</button>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    </div>
+  
+  </div>
+  <style>
+        .tile
+        {
+        width:80%;
+        }
+        #tile-1 .tab-pane
+        {
+        padding:15px;
+        }
+        #tile-1 .nav-tabs
+        {
+        position:relative;
+        border:none!important;
+        background-color:#fff;
+        border-radius:6px;
+        }
+        #tile-1 .nav-tabs li
+        {
+        margin:0px!important;
+        }
+        #tile-1 .nav-tabs li a
+        {
+        position:relative;
+        margin-right:0px!important;
+        font-size:16px;
+        border:none!important;
+        color:#333;
+        }
+        #tile-1 .slider
+        {
+        display:inline-block;
+        width:30px;
+        height:4px;
+        border-radius:3px;
+        background-color:#cc0000;
+        position:absolute;
+        z-index:1200;
+        bottom:0;
+        transition:all .4s linear;
+        
+        }
+        #tile-1 .nav-tabs .active
+        {
+        background-color:transparent!important;
+        border:none!important;
+    }
+  </style>
+  <script>
+    $("#tile-1 .nav-tabs a").click(function() {
+        var position = $(this).parent().position();
+        var width = $(this).parent().width();
+          $("#tile-1 .slider").css({"left":+ position.left,"width":width});
+      });
+      var actWidth = $("#tile-1 .nav-tabs").find(".active").parent("li").width();
+      var actPosition = $("#tile-1 .nav-tabs .active").position();
+      $("#tile-1 .slider").css({"left":+ actPosition.left,"width": actWidth});      
+  </script>
