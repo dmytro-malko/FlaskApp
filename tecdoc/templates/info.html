@@ -1,7 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
+{% with messeges = get_flashed_messages(with_categories=true) %}
+    {% if messeges %}
+        {% for category, messege in messeges %}
+              <p class="alert alert-{{category}}">{{ messege }}</p>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
 <div class="container">
-        <div class="row justify-content-center">
+        <div class="row justify-content-center" style="margin: 20px auto; width: 80%;">
             <div class="col-12 col-md-10 col-lg-8">
                 <form method="GET">
                     <div class="row no-gutters align-items-center">
@@ -15,12 +22,48 @@
                 </form>
             </div>
         </div>
+        {% if article_from_model %}
+        <div class='panel-body'>
+            <table class='table table-dark'>
+                <thead>
+                    <tr>
+                        <td scope='col'>Название</td>
+                        <td scope='col'>Номер на сайте</td>
+                        <td scope='col'>Артикул поставщика</td>
+                        <td scope='col'>Бренд</td>
+                        <td scope='col'>Цена на сайте</td>
+                        <td scope='col'>Количество</td>
+                        <td scope='col'>Кроссы</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in article_from_model %}
+                    <tr>
+                        <td>{{i.NormalizedDescription}}</td>
+                        <td>{{i.model}}</td>
+                        <td>{{i.FoundString}}</td>
+                        <td>{{i.description}}</td>
+                        <td>{{i.price}}</td>
+                        <td>{{i.quantity}}</td>
+                        <td>
+                            <form action="info">
+                                <input style="display: none;" type="text" name="article" value="{{i.FoundString.replace(' ', '')}}">
+                                <input style="display: none;" type="text" name="brand_id" value="{{i.suppliers_id}}">
+                                <input class="btn btn-success" type="submit" value="Поиск кроссов">
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
     {% if all_articles_suppliers %}
     <div class="table-responsive">
     <table class="table table-dark search-table" style="margin: 20px auto; width: 80%; text-align: center;">
     <tbody>
     {% for article in all_articles_suppliers %}
-      <tr id="row-{{all_articles_suppliers.index(article)+1}}" onclick="location='info?article={{article.DataSupplierArticleNumber}}&brand_id={{article.suppliers_id}}'">
+      <tr id="row-{{all_articles_suppliers.index(article)+1}}" onclick="location='?article={{article.DataSupplierArticleNumber}}&brand_id={{article.suppliers_id}}'">
         <th scope="row">{{article.description}}</th>
         <td>{{article.FoundString}}</td>
         <td>{{article.NormalizedDescription}}</td>
@@ -49,41 +92,6 @@
         </div>
         {% endfor %}
         {% include '_navbar-info.html' %}
-        
-        <!-- {% if article_desc %}
-        <div class='panel-body'>
-            <table class='table table-striped table-dark'>
-                <tbody>
-                {% for i in article_desc %}
-                <tr>
-                    <td><b>{{i.description}}</b></td>
-                    <td>{{i.displayvalue}}</td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            <div class="text-center">
-                <button class="btn btn-primary" title="Редактировать">Редактировать</button>
-            </div>
-        </div>
-        {% endif %}
-        {% if article_applicability %}
-        <div class='panel-body'>
-            <table class='table table-striped table-dark'>
-                <tbody>
-                {% for i in article_applicability %}
-                <tr>
-                    <td><b>{{i.fulldescription}}</b></td>
-                    <td>{{i.constructioninterval}}</td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            <div class="text-center">
-                <button class="btn btn-primary" title="Редактировать">Редактировать</button>
-            </div>
-        </div>
-        {% endif %} -->
     </div>
     <div id="addCrossesModal" class="modal" style="display: none;">
         <div class="login-box">
@@ -134,7 +142,7 @@
     <ul class="grid-crosses">
         {% for i in article_crosses %}
             <li>
-                <a href="/info?article={{i.PartsDataSupplierArticleNumber}}&brand_id={{i.id}}">
+                <a href="/?article={{i.PartsDataSupplierArticleNumber}}&brand_id={{i.id}}">
                     {{i.PartsDataSupplierArticleNumber}}
                 <strong>{{i.brand}}</strong>
                 </a>

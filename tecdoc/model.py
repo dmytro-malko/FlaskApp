@@ -62,7 +62,7 @@ class ArticleInfo():
     def get_article_applicability(self, article, brand_id):
         self.cursor.execute("SELECT DISTINCT models.fulldescription, models.constructioninterval FROM `article_li`\
                             JOIN cars ON cars.cars_id=article_li.linkageId JOIN models ON cars.model_id=models.id\
-                            WHERE DataSupplierArticleNumber=%s AND supplierId=%s  ORDER BY `models`.`fulldescription` ASC", ([article,brand_id]))
+                            WHERE DataSupplierArticleNumber=%s AND supplierId=%s AND models.canbedisplayed='True' ORDER BY `models`.`fulldescription` ASC", ([article,brand_id]))
         self.article_applicability = self.cursor.fetchall()
         return self.article_applicability
 class UserData(ArticleInfo):
@@ -126,7 +126,7 @@ class UserData(ArticleInfo):
 
 
     def check_users_data(self):
-        self.results = self.cursor.execute("SELECT * FROM users")
+        self.results = self.cursor.execute("SELECT * FROM users ORDER BY `users`.`login` ASC")
         if self.results > 0:
             users = self.cursor.fetchall()
             self.cursor.close()

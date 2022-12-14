@@ -3,8 +3,8 @@
 <div style="width: 80%" class="container align-center admin-menu">
     <div class="row">
         <div class="col-sm-6">
-          <div class="card text-center">
-            <div class="card-body">
+          <div class="card text-center box-menu">
+            <div class="card-body box-body">
               <h5 class="card-title">Пользователи</h5>
               <p class="card-text">Добавленние и редактирование пользователей</p>
               <a href="admin/users" class="btn btn-primary">Пользователи</a>
@@ -12,14 +12,31 @@
           </div>
         </div>
         <div class="col-sm-6">
-          <div class="card text-center">
-            <div class="card-body">
+          <div class="card text-center box-menu">
+            <div class="card-body box-body">
               <h5 class="card-title">Кроссы</h5>
               <p class="card-text">Добавленние и редактирование кроссов</p>
               <a href="admin/crosses" class="btn btn-primary">Кроссы</a>
             </div>
           </div>
         </div>
-      </div>
+    </div>
 </div>
+<style>
+  .box-menu {
+    margin: 20px;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+  }
+  .box-menu .box-body {
+    background: #161718;
+  }
+  
+  .box-body {
+    background: rgba(0,0,0,.5);
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0,0,0,.6);
+    border-radius: 10px;
+  }
+</style>
 {% endblock %}

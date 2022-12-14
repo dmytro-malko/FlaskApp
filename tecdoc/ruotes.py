@@ -24,16 +24,16 @@ def admin_in(f):
             return redirect("/")
     return decorated_func
 
-@app.route('/', methods=['GET', 'POST'])
-# @logged_in
-def main():
-    if request.method == 'GET' and request.args.get('search'):
-        article = str(request.args.get('search'))
-        article_from_model = ArticleInfo().search_article_from_model(article)
-        return render_template('index.html', article_from_model=article_from_model)
-    return render_template('index.html')
+# @app.route('/', methods=['GET', 'POST'])
+# # @logged_in
+# def main():
+#     if request.method == 'GET' and request.args.get('search'):
+#         article = str(request.args.get('search'))
+#         article_from_model = ArticleInfo().search_article_from_model(article)
+#         return render_template('index.html', article_from_model=article_from_model)
+#     return render_template('index.html')
 
-@app.route('/info', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 # @logged_in
 def info():
     info = ArticleInfo()
@@ -49,19 +49,26 @@ def info():
         article_applicability = info.get_article_applicability(article, brand)
         manufacturers = info.get_list_manufacturers()
         info.close_connection()
-        print(article_applicability)
 
         return render_template('info.html', article_crosses=article_crosses,
         article_info=article_info, article_desc=article_desc, article_img=article_img,
         manufacturers=manufacturers, article_applicability=article_applicability)
 
     elif request.method == 'GET' and request.args.get('article'):
+        
         article_dirty = str(request.args.get('article'))
         article = "".join(c for c in article_dirty if c.isalnum())
-        
+
+        if article[0:2] == 'TD' and len(article) == 9:
+            article_from_model = ArticleInfo().search_article_from_model(article)
+            info.close_connection()
+            return render_template('info.html', article_from_model=article_from_model)
+
         all_articles_suppliers = info.serch_article(article)
         
         info.close_connection()
+        if len(all_articles_suppliers) == 1:
+            return redirect(f"/?article={all_articles_suppliers[0]['DataSupplierArticleNumber']}&brand_id={all_articles_suppliers[0]['suppliers_id']}")
         return render_template('info.html', all_articles_suppliers=all_articles_suppliers)
 
     return render_template('info.html')
@@ -134,4 +141,6 @@ def edit_user(id):
 
 @app.errorhandler(404)
 def page_not_found(error):
+    if request.url[-1] == '/':
+        return redirect(request.url.strip('/'))
     return render_template('404.html')
